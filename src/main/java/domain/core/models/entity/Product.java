@@ -1,6 +1,7 @@
 package domain.core.models.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.io.Serializable;
 
@@ -13,9 +14,11 @@ public class Product implements Serializable {
     @Column(name = "product_id")
     private Long id;
 
+    @NotEmpty(message = "Name is required")
     @Column(name = "product_name", length = 100)
     private String name;
 
+    @NotEmpty(message = "Description is required")
     @Column(name = "product_description", length = 500)
     private String description;
 
