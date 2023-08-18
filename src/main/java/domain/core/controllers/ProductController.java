@@ -1,12 +1,17 @@
 package domain.core.controllers;
 
+import domain.core.dto.ResponseData;
 import domain.core.models.entity.Product;
 import domain.core.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/product")
@@ -16,8 +21,24 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/create_product")
-    public Product create(@RequestBody Product product){
-        return productService.save(product);
+    public ResponseEntity<ResponseData<Product>> create(@Valid @RequestBody Product product, Errors errors){
+
+        ResponseData<Product> responseData = new ResponseData<>();
+
+        if (errors.hasErrors()){
+            for (ObjectError error : errors.getAllErrors()) {
+                responseData.getMessages().add(error.getDefaultMessage());
+            }
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        responseData.setStatus(true);
+        List<String> messages = responseData.getMessages();
+        messages.add("add Product Successfully");
+        responseData.setMessages(messages);
+        responseData.setPayload(productService.save(product)); // di sini juga masih ada error internal server error
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping("/find_all_products")
@@ -31,8 +52,24 @@ public class ProductController {
     }
 
     @PutMapping("/update_product")
-    public Product update(@RequestBody Product product){
-        return productService.save(product);
+    public ResponseEntity<ResponseData<Product>> update(@Valid @RequestBody Product product, Errors errors){
+
+        ResponseData<Product> responseData = new ResponseData<>();
+
+        if (errors.hasErrors()){
+            for (ObjectError error : errors.getAllErrors()) {
+                responseData.getMessages().add(error.getDefaultMessage());
+            }
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        responseData.setStatus(true);
+        List<String> messages = responseData.getMessages();
+        messages.add("add Product Successfully");
+        responseData.setMessages(messages);
+        responseData.setPayload(productService.save(product)); // di sini juga masih ada error internal server error
+        return ResponseEntity.ok(responseData);
     }
 
     @DeleteMapping("/delete_product/{id}")
@@ -40,7 +77,7 @@ public class ProductController {
         productService.remove(id);
     }
 
-    @GetMapping("/")
+    @GetMapping("/find_by_name")
     public List<Product> findByName(String name){
         return productService.findByName(name);
     }
