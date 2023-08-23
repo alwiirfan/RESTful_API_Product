@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +49,46 @@ public class CategoryController {
         responseData.setPayload(categoryService.save(category));
         return ResponseEntity.ok(responseData);
 
+    }
+
+    @GetMapping("/find_all_categories")
+    public Iterable<Category> findAll(){
+        return categoryService.findAll();
+    }
+
+    @GetMapping("/find_category_by_id/{id}")
+    public Category findByID(@PathVariable("id") Long id){
+        return categoryService.findByID(id);
+    }
+
+    @PutMapping("/update_category")
+    public ResponseEntity<ResponseData<Category>> update(@Valid @RequestBody CategoryDTO categoryDTO, Errors errors){
+
+        ResponseData<Category> responseData = new ResponseData<>();
+
+        if (errors.hasErrors()){
+            for (ObjectError error : errors.getAllErrors()){
+                responseData.getMessages().add(error.getDefaultMessage());
+            }
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        Category category = modelMapper.map(categoryDTO, Category.class);
+
+        responseData.setStatus(true);
+        List<String> messages = responseData.getMessages();
+        messages.add("update category successfully");
+        responseData.setMessages(messages);
+        responseData.setPayload(category);
+        return ResponseEntity.ok(responseData);
+
+    }
+
+    @DeleteMapping("/delete_category/{id}")
+    public void delete(@PathVariable("id") Long id){
+        categoryService.remove(id);
     }
 
 }
