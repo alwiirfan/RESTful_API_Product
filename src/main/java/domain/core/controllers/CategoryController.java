@@ -81,7 +81,7 @@ public class CategoryController {
         List<String> messages = responseData.getMessages();
         messages.add("update category successfully");
         responseData.setMessages(messages);
-        responseData.setPayload(category);
+        responseData.setPayload(categoryService.save(category));
         return ResponseEntity.ok(responseData);
 
     }
