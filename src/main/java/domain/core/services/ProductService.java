@@ -1,6 +1,7 @@
 package domain.core.services;
 
 import domain.core.models.entity.Product;
+import domain.core.models.entity.Supplier;
 import domain.core.models.repositorry.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,14 @@ public class ProductService {
 
     public List<Product> findByName(String name){
         return productRepository.findByNameContains(name);
+    }
+
+    public void addSupplier(Supplier supplier, Long productId){
+        Product product = findByID(productId);
+        if (product == null){
+            throw new RuntimeException("Product with ID : " + productId + " not found");
+        }
+        product.getSuppliers().add(supplier);
+        save(product);
     }
 }
