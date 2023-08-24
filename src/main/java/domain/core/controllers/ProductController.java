@@ -2,6 +2,7 @@ package domain.core.controllers;
 
 import domain.core.dto.ResponseData;
 import domain.core.models.entity.Product;
+import domain.core.models.entity.Supplier;
 import domain.core.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +81,10 @@ public class ProductController {
     @GetMapping("/find_by_name")
     public List<Product> findByName(String name){
         return productService.findByName(name);
+    }
+
+    @PostMapping("/add_supplier/{id}")
+    public void addSupplier(@RequestBody Supplier supplier, @PathVariable("id") Long productId){
+        productService.addSupplier(supplier,productId);
     }
 }
