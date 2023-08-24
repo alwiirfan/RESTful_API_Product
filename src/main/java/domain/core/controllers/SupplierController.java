@@ -78,7 +78,7 @@ public class SupplierController {
 
         responseData.setStatus(true);
         List<String> messages = responseData.getMessages();
-        messages.add("success to create supplier");
+        messages.add("success to update supplier");
         responseData.setMessages(messages);
         responseData.setPayload(supplierService.save(supplier));
         return ResponseEntity.ok(responseData);
