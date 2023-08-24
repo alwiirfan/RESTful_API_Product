@@ -1,5 +1,8 @@
 package domain.core.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -8,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "product")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product implements Serializable {
 
     @Id
@@ -29,6 +33,7 @@ public class Product implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "product_of_supplier", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "supplier_id"))
+    // @JsonManagedReference
     private Set<Supplier> suppliers;
 
     public Product() {
