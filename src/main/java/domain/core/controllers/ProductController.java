@@ -1,6 +1,7 @@
 package domain.core.controllers;
 
 import domain.core.dto.ResponseData;
+import domain.core.dto.SearchData;
 import domain.core.models.entity.Product;
 import domain.core.models.entity.Supplier;
 import domain.core.services.ProductService;
@@ -78,13 +79,18 @@ public class ProductController {
         productService.remove(id);
     }
 
-    @GetMapping("/find_by_name")
-    public List<Product> findByName(String name){
-        return productService.findByName(name);
-    }
-
     @PostMapping("/add_supplier/{id}")
     public void addSupplier(@RequestBody Supplier supplier, @PathVariable("id") Long productId){
         productService.addSupplier(supplier,productId);
+    }
+
+    @PostMapping("/search_product")
+    public Product findProductByName(@RequestBody SearchData searchData){
+        return productService.findProductByName(searchData.getSearchKey());
+    }
+
+    @PostMapping("/search_product/like")
+    public List<Product> findProductByNameLike(@RequestBody SearchData searchData){
+        return productService.findProductByNameLike(searchData.getSearchKey());
     }
 }
