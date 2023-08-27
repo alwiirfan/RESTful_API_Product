@@ -35,10 +35,6 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<Product> findByName(String name){
-        return productRepository.findByNameContains(name);
-    }
-
     public void addSupplier(Supplier supplier, Long productId){
         Product product = findByID(productId);
         if (product == null){
@@ -46,5 +42,13 @@ public class ProductService {
         }
         product.getSuppliers().add(supplier);
         save(product);
+    }
+
+    public Product findProductByName(String name){
+        return productRepository.findProductByName(name);
+    }
+
+    public List<Product> findProductByNameLike(String name){
+        return productRepository.findProductByNameLike(name);
     }
 }
