@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private SupplierService supplierService;
 
     // save = bisa untuk create dan untuk update
     public Product save(Product product){
@@ -49,6 +53,18 @@ public class ProductService {
     }
 
     public List<Product> findProductByNameLike(String name){
-        return productRepository.findProductByNameLike(name);
+        return productRepository.findProductByNameLike("%" + name + "%");
+    }
+
+    public List<Product> findByCategory(Long categoryId){
+        return productRepository.findProductByCategory(categoryId);
+    }
+
+    public List<Product> findBySupplier(Long supplierId){
+        Supplier supplier = supplierService.findByID(supplierId);
+        if (supplier == null){
+            return new ArrayList<>();
+        }
+        return productRepository.findProductBySupplier(supplier);
     }
 }
